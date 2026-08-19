@@ -1,8 +1,5 @@
-import bcrypt from "bcrypt"
 import jsonResponse from "../lib/jsonResponse.js";
-import log from "../lib/Trace.js";
 import User from "../schema/user.js";
-import getTokenFromHeader from "../auth/getTokenFromHeader.js";
 import { Router } from 'express'
 import CardSlide from "../schema/cardslide.js";
 

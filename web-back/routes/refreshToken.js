@@ -1,6 +1,6 @@
 import express from "express"
 import jsonResponse from "../lib/jsonResponse.js";
-import log from "../lib/Trace.js"
+import log from "../lib/trace.js"
 import {verifyRefreshToken} from "../auth/verifyTokens.js"
 import {generateAccessToken} from "../auth/generateTokens.js"
 import getUserInfo from "../lib/getUserInfo.js";

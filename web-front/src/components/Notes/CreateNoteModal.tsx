@@ -4,7 +4,7 @@ import { useAuth } from "../../auth/AuthProvider"
 import { API_URL } from "../../auth/constants"
 
 
-function CreateNoteModal (props) {
+function CreateNoteModal (props: any) {
    
     const defaultvalue ={
         title: '',
@@ -41,7 +41,7 @@ function CreateNoteModal (props) {
     
 
     
-    function handleInputOnChange(e){
+    function handleInputOnChange(e: any){
         const {name, value} = e.target
         setForm({
             ...form,

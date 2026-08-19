@@ -1,5 +1,5 @@
 
-const OpenModalBtn = (props) =>{
+const OpenModalBtn = (props: any) =>{
     return(
         <button className="btnprovider" onClick={props.onClick}>capacidades</button>
     )

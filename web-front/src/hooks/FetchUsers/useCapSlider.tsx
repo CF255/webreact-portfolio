@@ -11,7 +11,7 @@ export function useCapSlider  () {
     const auth = useAuth()
 
     let fetchUsers = () =>{
-        fetch(`http://localhost:3100/api/adminpage/capacardslide`,{
+        fetch(`${API_URL}/adminpage/capacardslide`,{
             headers: {
               "Content-Type": "aplication/json",
               Authorization: `Bearer ${auth.getAccessToken()}`,

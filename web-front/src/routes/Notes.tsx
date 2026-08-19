@@ -24,7 +24,7 @@ export default function Notes(){
     const [deleteResponse, setDeleteResponse] = useState("");
     const [ editeNoteResponse, setEditeNoteResponse] = useState("");
     const [ createNoteResponse, setCreateNoteResponse] = useState("");
-    const [visiblestartactive, setVisiblestartactive] = useState(true);
+    const [visiblestartactive] = useState(true);
     const [visiblestartDesactive, setVisiblestartDesactive] = useState(false); 
  
     const {users} = useUsers()  

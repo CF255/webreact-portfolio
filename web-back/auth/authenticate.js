@@ -1,4 +1,4 @@
-import log from "../lib/Trace.js";
+import log from "../lib/trace.js";
 import validateToken from "./validateToken.js"
 import { verifyAccessToken } from "./verifyTokens.js";
 

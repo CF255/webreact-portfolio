@@ -5,7 +5,6 @@ import { useAuth } from "../auth/AuthProvider"
 import { useCapSlider } from "../hooks/FetchUsers/useCapSlider"
 import { API_URL } from "../auth/constants"
 import { Panel } from "../components/AdminPage/Panel"
-import { useState } from "react"
 
 
 
@@ -13,8 +12,7 @@ import { useState } from "react"
 function AdminPage (){
 
     const auth = useAuth()
-    const {users} = useCapSlider() 
-    const [modalOpen, setModalOpen] = useState(false)
+    const {users} = useCapSlider()
 
 /*     const id = users.find(a => a.id)
     console.log(id)
@@ -128,7 +126,8 @@ function AdminPage (){
         const u = users.find(a => a.id === String(id))
         const card = u?.cardslide.find((car)=> car.id)
         const cardId = card?.id
- 
+        if (!cardId) return
+
          changeSlideOtion(cardId)
     }
 
@@ -136,6 +135,7 @@ function AdminPage (){
         const u = users.find(a => a.id === String(id))
         const card = u?.cardslide.find((car)=> car.id)
         const cardId = card?.id
+        if (!cardId) return
 
          changeTicTacOption(cardId)
     }
@@ -144,7 +144,8 @@ function AdminPage (){
         const u = users.find(a => a.id === String(id))
         const card = u?.cardslide.find((car)=> car.id)
         const cardId = card?.id
- 
+        if (!cardId) return
+
          changeApiPeliOption(cardId)
     }
 
@@ -152,6 +153,7 @@ function AdminPage (){
         const u = users.find(a => a.id === String(id))
         const card = u?.cardslide.find((car)=> car.id)
         const cardId = card?.id
+        if (!cardId) return
 
          changeGiffyOption(cardId)
     }
@@ -160,6 +162,7 @@ function AdminPage (){
         const u = users.find(a => a.id === String(id))
         const card = u?.cardslide.find((car)=> car.id) 
         const cardId = card?.id
+        if (!cardId) return
 
          changeMessageOption(cardId)
     }

@@ -3,7 +3,7 @@ import { useAuth } from "../../auth/AuthProvider"
 import { API_URL } from "../../auth/constants"
 import { Panel } from "./Panel"
 
-const EditModalCapa = (props) =>{
+const EditModalCapa = (props: any) =>{
 
     const auth = useAuth()
 
@@ -38,7 +38,7 @@ const EditModalCapa = (props) =>{
         messages: props.cardslide.messages
     })
 
-    function handleInputOnChange(e){
+    function handleInputOnChange(e: any){
         const {name, value} = e.target
         setForm({
             ...form,
@@ -58,7 +58,7 @@ const EditModalCapa = (props) =>{
     }
 
     return<>
-     <Panel onAccept={handleGuardar}>
+     <Panel>
 
         <div className="capacidadesadmin">
 
@@ -90,7 +90,7 @@ const EditModalCapa = (props) =>{
 <input type="checkbox" name="messages" id="messages" value={form.messages} onChange={handleInputOnChange}/>
 </div>
 <div className="capacidadactionbutton">
-<button type="submit">guardar</button>
+<button type="button" onClick={handleGuardar}>guardar</button>
 </div>
 </div>
 {/* </form>

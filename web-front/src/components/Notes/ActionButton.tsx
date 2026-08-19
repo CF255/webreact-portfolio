@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faNotesMedical } from "@fortawesome/free-solid-svg-icons";
 
 
-const ActionButton = (props)=>{
+const ActionButton = (props: any)=>{
 
     const auth = useAuth()
     const id = useParams().id

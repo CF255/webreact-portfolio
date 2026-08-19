@@ -4,7 +4,7 @@ import { API_URL } from "../../auth/constants"
 import { useAuth } from "../../auth/AuthProvider"
 
 
-const EditNoteModal = (props) =>{
+const EditNoteModal = (props: any) =>{
     const auth = useAuth()
 
     async function editNote(id:string, payload: unknown) {
@@ -35,7 +35,7 @@ const EditNoteModal = (props) =>{
         description: props.note.description
     })
 
-    function handleInputOnChange(e){
+    function handleInputOnChange(e: any){
         const {name, value} = e.target
         setForm({
             ...form,

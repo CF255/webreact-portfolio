@@ -1,7 +1,7 @@
 import "/public/css/modalnotes.css"
 
 
-const Modal = (props) =>{
+const Modal = (props: any) =>{
 
     if(!props.isOpen) return null;
 

@@ -1,5 +1,5 @@
 import jsonResponse from "../lib/jsonResponse.js";
-import log from "../lib/Trace.js";
+import log from "../lib/trace.js";
 import User from "../schema/user.js";
 import { Router } from 'express'
 

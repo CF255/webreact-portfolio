@@ -1,4 +1,4 @@
-import { faFileEdit, faStar, faTrash } from "@fortawesome/free-solid-svg-icons"
+import { faFileEdit, faTrash } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useEffect, useState } from "react";
 import { useAuth } from "../../auth/AuthProvider";
@@ -8,7 +8,7 @@ import { useParams } from "react-router-dom";
 
 
 
-const CardNote = (props) =>{
+const CardNote = (props: any) =>{
 
     const [visibleBtns, setVisibeBtns] = useState(false);
 

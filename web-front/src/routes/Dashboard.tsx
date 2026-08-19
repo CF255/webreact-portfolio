@@ -13,7 +13,7 @@ import imglogotresenraya from '/img/tresenraya.png'
 import imgapipelis from '/img/logoapipelis.jpg'
 import imglogogiphy from '/img/imglogogiphy.jpg'
 import imgminilogogiphi from '/img/imgminilogogiphy.jpg'
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { PortalLayout } from "../layout/PortalLayout";
 import { useAuth } from "../auth/AuthProvider";
 import { useCapSlider } from "../hooks/FetchUsers/useCapSlider";
