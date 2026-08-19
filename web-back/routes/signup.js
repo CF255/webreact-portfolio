@@ -1,20 +1,13 @@
 import User from "../schema/user.js"
 import  jsonResponse from "../lib/jsonResponse.js";
 import { Router } from 'express'
-import {upload} from "../config/multer.js";
-import { uploadFile } from "../util/uploadFile.js";
 import CardSlide from "../schema/cardslide.js";
 const router = Router();
 
 
+router.post("/", async function (req, res, next) {
 
-
-router.post("/", upload.fields([{name: 'image', maxCount: 1}]),async function (req, res, next) {
-
-
- const{username, password, name} = req.body
-  const image = req.files?.image
-  const  body = req.body;
+  const { username, password, name } = req.body
 
   if (!username || !password || !name) {
     return res.status(400).json(
@@ -32,14 +25,6 @@ router.post("/", upload.fields([{name: 'image', maxCount: 1}]),async function (r
     );
   }
 
-  if (!image || image.length === 0) {
-    return res.status(400).json(
-      jsonResponse(400, {
-        error: "La imagen de perfil es requerida",
-      })
-    );
-  }
-
   try {
 
     const user = new User();
@@ -53,13 +38,10 @@ router.post("/", upload.fields([{name: 'image', maxCount: 1}]),async function (r
       );
 
     } else {
-        const {downloadURL} = await uploadFile(image[0])
-    
-        const user = await new User({
-          username: body.username,
-          password: body.password,
-          name: body.name,
-          image: downloadURL
+        const newUser = new User({
+          username,
+          password,
+          name,
         })
 
         const capaslide = new CardSlide({
@@ -68,22 +50,21 @@ router.post("/", upload.fields([{name: 'image', maxCount: 1}]),async function (r
           apipelis: false,
           giffy: false,
           messages: false,
-          user: user._id
+          user: newUser._id
         });
 
         const saveslide = await capaslide.save();
-        user.cardslide = user.cardslide.concat(saveslide._id);
-        await user.save();
+        newUser.cardslide = newUser.cardslide.concat(saveslide._id);
+        await newUser.save();
 
         return res.status(200).json(
           jsonResponse(200, {
             sucess: "Usuario creado",
           })
         );
-
-      
     }
   } catch (err) {
+    console.error(err)
     return res.status(500).json(
       jsonResponse(500, {
         error: "Error creando usuario",

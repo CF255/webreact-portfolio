@@ -7,8 +7,6 @@ import { UserList } from "../components/Perfil/UserList";
 import ImagePerfils from "../components/Perfil/ImagePerfil";
 import VisibleFooter from "../components/Perfil/VisibleFooter";
 import VisibleEditarPerfil from "../components/Perfil/VisibleEditarPerfil";
-import VisibleImagenPerfil from "../components/Perfil/VisibleImagenPerfi";
-import VisibleimgPortada from "../components/Perfil/VisibleimgPortada";
 import { Link, useParams } from "react-router-dom";
 import DescriptionIndi from "../components/Perfil/DescriptionIndi";
 
@@ -30,10 +28,7 @@ export default function Perfil(){
                 <div className="perfil-usuario-portada">
                 <div className="perfil-usuario-avatar">
                      <ImagePerfils users={users}/>
-                    
-                    <VisibleImagenPerfil/>
                 </div>
-                  <VisibleimgPortada/>
                 </div>
             </div>
 

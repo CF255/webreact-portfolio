@@ -19,7 +19,7 @@ export function UserList({users}:{users: User[]}){
             <article className='articleperfil' key={user.id}>
              <header className='headerperfil sidedivperfil'>
           <Link className='aroutes'  to={`/perfil/${user.id}`} >
-          <img className='imgperfil' src={user.image} alt={fullName(user)}></img>
+          <img className='imgperfil' src="/img/logoperfil.png" alt={fullName(user)}></img>
           </Link>
 
 

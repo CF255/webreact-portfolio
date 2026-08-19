@@ -2,14 +2,14 @@ import { useState } from "react";
 import { useAuth } from "../auth/AuthProvider";
 import { Navigate, useNavigate } from "react-router-dom";
 import { AuthResponse, AuthResponseError } from "../types/types";
+import { API_URL } from "../auth/constants";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
-import { faUser, faLock, faUserNinja, faImage} from "@fortawesome/free-solid-svg-icons";
+import { faUser, faLock, faUserNinja} from "@fortawesome/free-solid-svg-icons";
 import { faFacebook, faGithub, faGoogle, faInstagram } from "@fortawesome/free-brands-svg-icons";
 import "../../public/css/login-signup.css"
 
 export default function Signup() {
 
-  const [preview, setPreview] = useState<File | null>(null)
   const [errorResponse, setErrorResponse] = useState("");
   const [missResponse, setMissResponse] = useState("");
   const [sucessResponse, setSucessResponse] = useState("");
@@ -17,7 +17,6 @@ export default function Signup() {
     name: '',
     username: '',
     password: '',
-    image: null as File | null
   }
   const [form, setForm] = useState(defaulValue)
 
@@ -28,34 +27,27 @@ export default function Signup() {
   async function handleSubmit(e: React.ChangeEvent<HTMLFormElement>) {
     e.preventDefault();
 
-
-    const formData = new FormData()
-
-    for(const [key, value] of Object.entries(form)){
-      formData.append(key, value!)
-    }
-   
-
     try {
-      const response = await fetch("http://localhost:3100/api/signup", {
+      const response = await fetch(`${API_URL}/signup`, {
         method: "POST",
-        body: formData
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form)
       })
 
       if (response.ok) {
         const json = (await response.json()) as AuthResponse;
-        console.log(json);
         setForm(defaulValue)
 
-        
         setSucessResponse(json.body.sucess)
         setTimeout(() => {
           goTo("/login");
         }, 2000);
-       
+
       } else {
         const json = (await response.json()) as AuthResponseError;
-      
+
         setErrorResponse(json.body.error);
         setMissResponse(json.body.miss);
 
@@ -67,33 +59,17 @@ export default function Signup() {
     } catch (error) {
       console.log(error);
     }
-  }  
-
-  const handlechange = (e: React.ChangeEvent<HTMLInputElement>) =>{
-    
-    
-
-    if(e.target.name === 'image'){
-      const file = e.target.files ? e.target.files[0] : null
-setForm ({...form, [e.target.name]: file})
-    }else{
-
-      setForm ({...form, [e.target.name]: e.target.value})
-    }
-  
-
-    if(!e.target.files) return;
-    setPreview(e.target.files[0])
-  
-   
-  
   }
 
- 
+  const handlechange = (e: React.ChangeEvent<HTMLInputElement>) =>{
+      setForm ({...form, [e.target.name]: e.target.value})
+  }
+
+
 
 const handleSign_in_btn = () =>{
   const container = document.querySelector(".container")
-  container?.classList.remove("sign-up-mode") 
+  container?.classList.remove("sign-up-mode")
 
     setTimeout(() => {
         goTo("/login")
@@ -118,25 +94,11 @@ if (auth.isAuthenticated) {
     {!!errorResponse && <div className="errormessage">{errorResponse}</div>}
     {!!missResponse && <div className="missmessage">{missResponse}</div>}
     {!!sucessResponse && <div className="sucessmessage">{sucessResponse}</div>}
-    </div> 
-
-    
+    </div>
 
     <div className="imagen-signup">
-        <img  src={preview === null ? "../../public/img/logoperfil.png" :URL.createObjectURL(preview)} alt=""  />
+        <img src="/img/logoperfil.png" alt=""  />
     </div>
-
-  <div className="input-field">
-   <div className="input-field-i"> 
-   <FontAwesomeIcon style={{color: '#acacac'}} icon={faImage}/>
-   </div>
-
-   <div className="file-select" id="src-file1" >
-  <input type="file" name="image" accept="image/png, image/jpeg" onChange={handlechange}  aria-label="Archivo"></input>
-</div>
-  
-    </div>
-
 
    <div className="input-field">
    <div className="input-field-i">
@@ -156,7 +118,7 @@ if (auth.isAuthenticated) {
    <div className="input-field-i">
    <FontAwesomeIcon style={{color: '#acacac'}} icon={faLock}/>
    </div>
-   
+
     <input type="password" required value={form.password} name="password" onChange={handlechange} placeholder="Password"/>
     </div>
 
@@ -172,7 +134,7 @@ if (auth.isAuthenticated) {
           </form>
         </div>
     </div>
-    
+
 
     <div className="panels-container">
                 <div className="panel left-panel">
@@ -180,7 +142,7 @@ if (auth.isAuthenticated) {
                         <h3>new here?</h3>
                         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
                         <button className="btn trasparent">Sign up</button>
-                       
+
                     </div>
                     <img src="/img/mobile.svg" className="image" alt="" />
                 </div>
@@ -191,12 +153,12 @@ if (auth.isAuthenticated) {
                         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
                         <button  className="btn trasparent" onClick={handleSign_in_btn}>Sign in</button>
 
-                        
+
                     </div>
                     <img src="/img/switch.svg" className="image" alt="" />
                 </div>
             </div>
  </div>
- 
+
   );
 }

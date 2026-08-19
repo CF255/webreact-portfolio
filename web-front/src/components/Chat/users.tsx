@@ -4,12 +4,8 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { User } from "../../types/types";
 import { useEffect } from "react";
 import logoperfil from "/public/img/logoperfil.png"
-import { useAuth } from "../../auth/AuthProvider";
 
 export default function Users({joinRoom, setUsername, users, setRoom, setImagePerfil}:{setImagePerfil:any,setRoom: any ,joinRoom:any, setUsername:any, users: User[]}){
-
-
-    const auth = useAuth()
 
     useEffect(()=>{
         setUsername("null")
@@ -39,14 +35,14 @@ joinRoom()
 
             <button onClick={()=>{
                 setUsername(user.name)
-                setRoom("1") 
-                setImagePerfil(user.image)
+                setRoom("1")
+                setImagePerfil(logoperfil)
       
                  joinRoom()
                  }}  className='articlePerfilChat' key={user.id} >
             
     
-          <img className='imgperfilChat' src={user.image}></img>
+          <img className='imgperfilChat' src={logoperfil}></img>
         
 
           <div className='containerTextChatPerfil'>

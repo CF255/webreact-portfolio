@@ -12,7 +12,7 @@ export default function ImagePerfils({users}:{users: User[]}){
 
     return(
       <>
-     <img src={user?.image} alt={user?.name} /> 
+     <img src="/img/logoperfil.png" alt={user?.name} />
       </>
     )
 

@@ -1,6 +1,5 @@
 
 import { Link } from 'react-router-dom'
-import '/img/logoperfil.png'
 import { useAuth } from '../../auth/AuthProvider'
 import '/public/css/perfilinformation.css'
 
@@ -16,7 +15,7 @@ function PerfilInformation(){
         <article className='articleperfil'>
             <header className='headerperfil'>
                 <Link className='aroutes'  to={`/perfil/${auth.getUser()?.id }`} >
-                <img className='imgperfil' src={auth.getUser()?.image}></img>
+                <img className='imgperfil' src="/img/logoperfil.png"></img>
                 </Link>
 
                 <div className='containerperfiltext'>
