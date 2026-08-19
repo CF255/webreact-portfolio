@@ -1,0 +1,112 @@
+
+.h1apipelis{
+    display: flex;
+    justify-content: center;
+}
+
+.btnapipelis{
+    border: none;
+    outline: none;
+    background-color:#153e8e ;
+    color: #fff;
+    padding: 10px;
+    border-radius: 0 5px 5px 0px;
+    cursor: pointer;
+}
+
+.mensajeapipelis{
+    display: flex;
+    justify-content: center;
+}
+
+.inputapipelis{
+    background-color: rgba(125, 125, 125, 0.379);
+    color: black;
+    outline: none;
+    border: none;
+    border-radius: 5px 0 0 5px;
+    width: 300px;
+    height: 40px;
+    padding: 5px;
+    color: #000;
+    font-weight: 600;
+}
+
+.pageapipelis{
+    width: 100%;
+    margin-top: 80px;
+}
+
+.mainapipelis{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.checkboxapipelis{
+    display: flex;
+    justify-content: end;
+    margin: 0 5px;
+
+}
+
+.checkboxapipelis span{
+    margin: 0 5px;
+}
+
+.checkboxapipelis input{
+    cursor: pointer;
+}
+
+
+.headerapipelis{
+align-items: center;
+justify-content: center;
+display: flex;
+padding: 30px;
+}
+
+
+.movies{
+list-style: none;
+display: grid;
+width: 100%;
+gap: 5px;
+grid-template-columns: repeat(auto-fit, minmax(300px,1fr));
+padding: 0;
+}
+
+
+
+.movie h3, .movie p{
+    margin: 0;
+    
+}
+
+.divinfomovie{
+   
+    height: 50px;
+    overflow: hidden;
+}
+
+.movie{
+    text-align: center;
+    
+}
+
+.movie img{
+    border-radius: 8px;
+    margin-top: 0;
+    height: 350px;
+    width: 300px;
+}
+
+
+@media (max-width: 500px) {
+
+    .inputapipelis{
+       width: 200px;
+    }
+    
+ 
+}

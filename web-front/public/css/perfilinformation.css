@@ -1,0 +1,42 @@
+
+.articleperfil{
+    display: flex;
+    align-items: center;
+    color: #fff;
+    font-size: .8rem;
+    justify-content: center;
+}
+
+.articleperfil .headerperfil{
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    max-width: 110px;
+    overflow: hidden;
+}
+
+.articleperfil .headerperfil .containerperfiltext{
+    display: flex;
+    flex-direction: column;
+}
+
+.articleperfil .headerperfil .spusernameperfil{
+    opacity: .6;
+}
+
+.articleperfil .imgperfil{
+    width: 35px;
+    height: 35px;
+    border-radius: 1000px;
+}
+
+.sidedivperfil{
+    color: #000;
+}
+
+
+
+
+    
+    
+

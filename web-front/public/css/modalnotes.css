@@ -1,0 +1,133 @@
+.modalNotesGrapper{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 30px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 999;
+    border-radius: 5px;
+    background: #f5f5f5;
+    display: flex;
+    width: 500px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+
+.overlay{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+}
+
+.titleModalNote{
+    color: #f99417;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: bold;
+    line-height: normal;
+    text-transform: uppercase;
+}
+
+.formGroup{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: start;
+    width: 100%;
+    
+}
+
+.FormLabel{
+    color: #0F2F6D;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: bold;
+    line-height: normal;
+    text-transform: uppercase;
+}
+
+.FormInput{
+    border-radius: 5px;
+    background-color: #fff;
+    height: 30px;
+    border: 1px solid #181a39;
+    width: 100%;
+    padding-left: 3px;
+}
+
+
+.FormTextArea{
+    border-radius: 5px;
+    border: 1px solid #181a39;
+    width: 100%;
+    height: 150px;
+    resize: none;
+    padding-left: 2px;
+
+}
+
+.btnOpcionsNotes{
+    border-radius: 5px;
+    background-color: #0F2F6D;
+}
+
+.btnOpcionsNotes{
+    width: 90px;
+    height: 35px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #0F2F6D;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin: 10px 0;
+    transition: .3s;
+    border: 2px solid #181a39;
+}
+
+.btnOpcionsNotes:hover{
+    background-color: #181a39;
+    border: 2px solid #0F2F6D;
+}
+
+.FormGroupBTN{
+    display: flex;
+    width: 100%;
+    justify-content: end;
+    gap: 5px;
+}
+
+.cancelarModalNotes{
+    background-color: #d77f13;
+}
+
+.cancelarModalNotes:hover{
+    background-color: #a65d04;
+}
+
+
+@media (max-width: 570px) {
+   
+   .modalNotesGrapper{
+    width: 95%;
+    padding: 15px;
+   }
+
+   
+.FormTextArea{
+
+    height: 100px;
+
+
+}
+
+}

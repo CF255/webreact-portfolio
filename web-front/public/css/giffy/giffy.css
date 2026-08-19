@@ -1,0 +1,246 @@
+
+  .bodygiffy{
+
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    position: absolute;
+    z-index: -1;
+    background-image: url(/public/img/fondo2.jpg);
+  }
+    
+
+
+   .App-content {
+    display: flex;
+    font-size: calc(10px + 1vmin);
+    min-height: 100vh;
+    padding: 16px;
+    text-align: left;
+    max-width: 1500px;
+    
+  }
+  
+
+   
+  .h33{
+    color: aliceblue;
+    font-size: 30px;
+    position: absolute;
+    top: 130px;
+    margin-left: 15px;
+  }
+  
+ .logo h1{
+    color: cadetblue;
+  }
+  
+
+
+  .App-content form{
+    position: absolute;
+  }
+  
+  .App-content input{
+    width: 300px;
+    height: 34px;
+    border-radius: 5px 0 0 5px;
+    margin: 0 0 0 15px;
+    border: none;
+    
+  } 
+
+
+  
+  .buscador button{
+    border-radius: 0 5px 5px 0;
+    height: 34px;
+    font-size: 12px;
+    border: none;
+    background-color: cadetblue;
+  }
+  
+  .sidediv{
+    background-color: rgb(0, 0, 0);
+    max-height: 510px;
+    border-radius: 5px;
+    padding: 0px 30px 90px 30px;
+    color: white;
+    overflow: auto;
+    overflow-x: hidden;
+  }
+  
+  .sidediv::-webkit-scrollbar{
+    width: 8px;
+    background-color: transparent;
+    border-radius: 20px;
+  }
+  .sidediv::-webkit-scrollbar:window-inactive {
+    display: none;
+  }
+  .sidediv::-webkit-scrollbar-thumb  {
+    background-color: #000000cb;
+    
+    border-radius: 6px;
+  }
+  
+  .sidediv ul{
+    list-style: none;
+    padding: 0;
+    text-align: left;
+  }
+  
+  .sidediv ul li a{
+    color: rgb(49, 80, 81);
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .sidediv ul li a:hover{
+    color: rgb(100, 163, 165);
+  }
+  
+   .containergif{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 5px;
+    margin: 120px 15px 0;
+    min-height: 100vh;
+    max-width: 1000px;
+    background-image: url(/public/img/fondo2.jpg);
+    border-radius: 5px;
+  } 
+  
+  
+  @media screen and (max-width:1370px){
+    .App-content{
+     
+      padding: 110px 0 20px;
+    }
+  
+    .containergif{
+      width: 95%;
+      max-width: 90rem;
+      margin: 0 auto;
+      grid-template-columns: repeat(3, 1fr);
+    }
+   
+    .h33{
+   top: 105px;
+   left: 25px;
+    }
+  
+    .sidediv{
+      top: 0;
+      position: absolute;
+      max-width: 300px;
+      max-height: 130px;
+      right: 0;
+      margin: 15px;
+      overflow: scroll;
+    }
+  
+  
+    .sidediv ul{
+      display: block;
+      flex-wrap: wrap ;
+      list-style: none;
+    }
+  
+    .sidediv ul li{
+      margin: 10px;
+     }
+
+     .buscador{
+      top: 60px;
+      left: 20px;
+     }
+  
+     .buscador button{
+      height: 35px;
+      font-size: 11px;
+  
+    }
+  }
+  
+  
+  
+  
+  
+  @media screen and (max-width:663px){
+  
+     .bodygiffy{
+      padding: 0;
+    }
+   
+    .App-content{
+      padding: 260px 0;
+    }
+   
+    .containergif{
+      width: 90%;
+      grid-template-columns: repeat(2, 1fr);
+    }
+  
+    .App-content .logo{
+      position: absolute;
+      left: 0;
+      margin: 10px;
+      font-size: 10px;
+      top: -23px;
+    }
+  
+    
+    .buscador{
+      position: absolute;
+      top: 50px;
+      width: 90%;
+      text-align: center;
+    }
+  
+    .h33{
+   top: 260px;
+    }
+  
+    .sidediv{
+      top: 90px;
+      position: absolute;
+      max-width: 100%;
+      max-height: 150px;
+      left: 0;
+      margin: 15px;
+      overflow: scroll;
+    }
+  
+    .buscador button{
+   
+      height: 35px;
+      font-size: 11px;
+  
+    }
+    
+  } 
+  
+  
+  
+  @media screen and (max-width:667px){
+  
+   
+    .App-content input{
+      width:70% ;
+    }
+   
+    .buscador button{
+   
+      height: 35px;
+      font-size: 11px;
+  
+    }
+    
+  }  
+  
+  
+  
