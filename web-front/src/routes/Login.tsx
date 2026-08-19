@@ -26,9 +26,7 @@ export default function Login(){
        
     }
 
-    async function handleSubmit(e: React.FormEvent<HTMLFormElement>){
-        e.preventDefault()
-
+    async function doLogin(loginUsername: string, loginPassword: string){
         try {
             const response = await fetch(`${API_URL}/login`,{
                 method: "POST",
@@ -36,8 +34,8 @@ export default function Login(){
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    username,
-                    password
+                    username: loginUsername,
+                    password: loginPassword
                 })
             })
 
@@ -65,12 +63,18 @@ export default function Login(){
             }
         } catch (error) {
             console.log(error)
-         
+
         }
     }
 
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>){
+        e.preventDefault()
+        await doLogin(username, password)
+    }
 
-    
+    async function handleDemoLogin(){
+        await doLogin("demo", "demo1234")
+    }
 
     const handleSign_up_btn = () =>{
         const container = document.querySelector(".container")
@@ -106,8 +110,6 @@ export default function Login(){
             <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username"></input>
            </div>
 
-        
-           <img src="../" alt="" />
            <div className="input-field">
            <div className="input-field-i">
            <FontAwesomeIcon style={{color: '#acacac'}} icon={faLock}/>
@@ -116,6 +118,10 @@ export default function Login(){
             </div>
         
             <input type="submit" value="Login" className="btn solid"/>
+
+            <button type="button" onClick={handleDemoLogin} className="btn trasparent" style={{marginTop: '0.75rem'}}>
+                Ver demo sin registrarse
+            </button>
 
             <p className="social-text">Sign in with social platforms</p>
             <div className="social-media">
