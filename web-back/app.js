@@ -1,5 +1,7 @@
 import express from "express"
 import cors from "cors"
+import helmet from "helmet"
+import { rateLimit } from "express-rate-limit"
 import mongoose from "mongoose"
 import dotenv from "dotenv"
 import  SignUp from "./routes/signup.js"
@@ -15,17 +17,43 @@ import { createServer } from "node:http"
 
 dotenv.config()
 
+process.on("unhandledRejection", (reason) => {
+    console.error("Unhandled promise rejection:", reason)
+})
+
 const app = express()
-const port = process.env.PORT || 3100 
+const port = process.env.PORT || 3100
 
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || "http://localhost:5173")
+    .split(",")
+    .map((origin) => origin.trim())
 
-app.use(cors())
+const corsOptions = {
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true)
+        } else {
+            callback(new Error("Not allowed by CORS"))
+        }
+    }
+}
+
+app.use(helmet())
+app.use(cors(corsOptions))
 app.use(express.json())
+
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit: 20,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: "Demasiados intentos, intenta de nuevo más tarde" }
+})
 
 const server = createServer(app)
 const io = new Server(server,{
     cors:{
-        origin: "http://localhost:5173",
+        origin: allowedOrigins,
         methods: ["GET", "POST"]
     },
     connectionStateRecovery:{}
@@ -55,13 +83,13 @@ async function main(){
 
 main().catch(console.error)
 
-app.use("/api/signup", SignUp)  
-app.use("/api/login", Login)
+app.use("/api/signup", authLimiter, SignUp)
+app.use("/api/login", authLimiter, Login)
 app.use("/api/signout", SignOut)
 app.use("/api/refresh-token", RefreshToken)
 app.use("/api/perfil", AuthenticateToken, Perfil) 
 app.use("/api/notes", AuthenticateToken, Notes) 
-app.use("/api/adminpage", /*  AuthenticateToken, */ AdminPage)
+app.use("/api/adminpage", AuthenticateToken, AdminPage)
 
 
 app.get("/", (req, res)=>{

@@ -34,8 +34,9 @@ const UserSchema = new mongoose.Schema({
     returnedObject.id = returnedObject._id.toString()
     delete returnedObject._id
     delete returnedObject.__v
+    delete returnedObject.password
   }
-})  
+})
 
 
 UserSchema.pre("save", function (next) {
@@ -55,8 +56,12 @@ UserSchema.pre("save", function (next) {
   }
 });
 
-UserSchema.methods.usernameExists = async function (username) {
-  const result = await mongoose.model("User").find({ username: username });
+UserSchema.methods.usernameExists = async function (username, excludeId) {
+  const query = { username: username };
+  if (excludeId) {
+    query._id = { $ne: excludeId };
+  }
+  const result = await mongoose.model("User").find(query);
   return result.length > 0;
 };
 
@@ -66,7 +71,6 @@ UserSchema.methods.idExists = async function (id) {
 };
 
 UserSchema.methods.isCorrectPassword = async function (password, hash) {
-  console.log(password, hash);
   const same = await bcrypt.compare(password, hash);
 
   return same;
@@ -79,11 +83,8 @@ UserSchema.methods.createAccessToken = function () {
 UserSchema.methods.createRefreshToken = async function (next) {
   const refreshToken = generateRefreshToken(getUserInfo(this));
 
-  console.error("refreshToken", refreshToken);
-
   try {
     await new Token({ token: refreshToken }).save();
-    console.log("Token saved", refreshToken);
     return refreshToken;
   } catch (error) {
     console.error(error);

@@ -15,13 +15,13 @@ router.get("/", async  (req, res, )=> {
             username: 1,
         })
           res.json(notes)
-        
+
     } catch (error) {
-        console.log(error)
-        res.status(500).send(error)
+        console.error(error)
+        res.status(500).json(jsonResponse(500, { error: "Ocurrio un problema" }))
     }
-  
-}); 
+
+});
 
 
  
@@ -47,9 +47,10 @@ router.post('/' ,async (req, res) =>{
       res.json(saveNote)
       } catch (error) {
         console.error(error)
+        res.status(500).json(jsonResponse(500, { error: "Ocurrio un problema" }))
       }
- 
- }) 
+
+ })
 
 
 router.get('/:id', async(req, res)=>{
@@ -57,16 +58,26 @@ router.get('/:id', async(req, res)=>{
        const note = await Note.findById(req.params.id)
        res.send(note)
     } catch (error) {
-       console.log(error)
-       res.status(500).send(error) 
+       console.error(error)
+       res.status(500).json(jsonResponse(500, { error: "Ocurrio un problema" }))
     }
 })
 
 
 router.put('/:id', async(req, res)=>{
     try {
+        const note = await Note.findById(req.params.id)
+
+        if (!note) {
+            return res.status(404).json(jsonResponse(404, { error: "Nota no encontrada" }))
+        }
+
+        if (note.user.toString() !== req.user.id) {
+            return res.status(403).json(jsonResponse(403, { error: "No puedes editar la nota de otro usuario" }))
+        }
+
         await Note.findByIdAndUpdate(req.params.id, req.body, {new:true})
-    
+
         return res.status(200).json(
             jsonResponse(200, {
                 sucess: "Nota editada",
@@ -74,7 +85,7 @@ router.put('/:id', async(req, res)=>{
           );
 
     } catch (error) {
-        console.log(error)
+        console.error(error)
        return res.status(500).json(
             jsonResponse(500, {
               error: "Ocurrio un problema",
@@ -86,17 +97,24 @@ router.put('/:id', async(req, res)=>{
 
 router.put('/fav/:id', async(req, res)=>{
   try {
-      
+
       const favRef = await Note.findById(req.params.id)
-      console.log(req.params.id)
-      
+
+      if (!favRef) {
+          return res.status(404).json(jsonResponse(404, { error: "Nota no encontrada" }))
+      }
+
+      if (favRef.user.toString() !== req.user.id) {
+          return res.status(403).json(jsonResponse(403, { error: "No puedes editar la nota de otro usuario" }))
+      }
+
       const note = await Note.findOneAndUpdate(
         {_id: req.params.id},
         {favorite: !favRef.favorite}
       )
 
       await note.save()
-  
+
       return res.status(200).json(
           jsonResponse(200, {
               sucess: "Nota favorita",
@@ -104,7 +122,7 @@ router.put('/fav/:id', async(req, res)=>{
         );
 
   } catch (error) {
-      console.log(error)
+      console.error(error)
      return res.status(500).json(
           jsonResponse(500, {
             error: "Ocurrio un problema",
@@ -117,6 +135,16 @@ router.put('/fav/:id', async(req, res)=>{
 
 router.delete('/:id', async(req, res)=>{
     try {
+        const note = await Note.findById(req.params.id)
+
+        if (!note) {
+            return res.status(404).json(jsonResponse(404, { error: "Nota no encontrada" }))
+        }
+
+        if (note.user.toString() !== req.user.id) {
+            return res.status(403).json(jsonResponse(403, { error: "No puedes borrar la nota de otro usuario" }))
+        }
+
         await Note.findByIdAndDelete(req.params.id)
 
         return res.status(200).json(
@@ -126,7 +154,7 @@ router.delete('/:id', async(req, res)=>{
           );
 
     } catch (error) {
-        console.log(error)
+        console.error(error)
         return res.status(500).json(
             jsonResponse(500, {
               error: "Ocurrio un problema",

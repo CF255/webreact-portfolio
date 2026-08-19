@@ -9,6 +9,14 @@ const router = Router();
 router.post("/", async function (req, res, next) {
   const { username, password } = req.body;
 
+  if (!username || !password) {
+    return res.status(400).json(
+      jsonResponse(400, {
+        error: "username y password son requeridos",
+      })
+    );
+  }
+
   try {
     let user = new User();
     const userExists = await user.usernameExists(username);
@@ -24,8 +32,6 @@ router.post("/", async function (req, res, next) {
       if (passwordCorrect) {
         const accessToken = user.createAccessToken();
         const refreshToken = await user.createRefreshToken();
-
-        console.log({ accessToken, refreshToken });
 
         return res.json(
           jsonResponse(200, {
@@ -51,7 +57,12 @@ router.post("/", async function (req, res, next) {
       );
     }
   } catch (err) {
-    console.log(err);
+    console.error(err);
+    return res.status(500).json(
+      jsonResponse(500, {
+        error: "Ocurrió un problema al iniciar sesión",
+      })
+    );
   }
 });
 

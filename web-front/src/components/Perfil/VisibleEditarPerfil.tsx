@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../../auth/AuthProvider";
 import { ModalMessage } from "../ModalMessages/Modal";
+import { API_URL } from "../../auth/constants";
 
 
 export default function VisibleEditarPerfil (){
@@ -30,15 +31,15 @@ export default function VisibleEditarPerfil (){
         }else{
   
           try {
-            const response = await fetch(`http://localhost:3100/api/perfil/${auth.getUser()?.id}/${name}/${username}/${password}`, {
+            const response = await fetch(`${API_URL}/perfil/${auth.getUser()?.id}`, {
               method: "PUT",
               headers: {
-                "Content-Type": "aplication/json",
+                "Content-Type": "application/json",
                 Authorization: `Bearer ${auth.getAccessToken()}`,
                },
-               body: JSON.stringify({ username })
+               body: JSON.stringify({ name, username, password })
             });
-             
+
               if(response.ok){
                 
                 console.log('si')

@@ -1,8 +1,6 @@
-import bcrypt from "bcrypt"
 import jsonResponse from "../lib/jsonResponse.js";
 import log from "../lib/Trace.js";
 import User from "../schema/user.js";
-import getTokenFromHeader from "../auth/getTokenFromHeader.js";
 import { Router } from 'express'
 
 
@@ -18,126 +16,136 @@ router.get("/",  (req, res, )=> {
 }); 
 
 router.get("/users", async (req, res, )=> {
-  
+
   try {
-    const users =  await User.find({}).populate('notes', {
+    const users =  await User.find({}).select('-password').populate('notes', {
       title: 1,
       description: 1,
       favorite: 1
     })
-    
-     res.status(200).json({users}) 
+
+     res.status(200).json({users})
 
 
 } catch (error) {
-    console.log(error)
-    res.status(500).send(error)
+    console.error(error)
+    res.status(500).json(jsonResponse(500, { error: "Ocurrió un problema" }))
 }
 
 
-}); 
+});
 
 router.get("/users/info", async (req, res, )=> {
- 
- 
+
+
 
   try {
-    const users =  await User.find({}).populate('notes', {
+    const users =  await User.find({}).select('-password').populate('notes', {
       title: 1,
       description: 1,
       favorite: 1
     })
-    res.json(users) 
-   
+    res.json(users)
+
 } catch (error) {
-    console.log(error)
-    res.status(500).send(error)
+    console.error(error)
+    res.status(500).json(jsonResponse(500, { error: "Ocurrió un problema" }))
 }
 
-}); 
+});
 
 router.get('/:id', async (request, response) => {
-  const user = await User.findById(request.params.id)
-  
-  response.json(user.toJSON())
+  try {
+    const user = await User.findById(request.params.id).select('-password')
+
+    if (!user) {
+      return response.status(404).json(jsonResponse(404, { error: "Usuario no encontrado" }))
+    }
+
+    response.json(user.toJSON())
+  } catch (error) {
+    console.error(error)
+    response.status(500).json(jsonResponse(500, { error: "Ocurrió un problema" }))
+  }
 })
 
 
-router.put("/:id/:newname/:newusername/:newpassword", async function(req, res, next ) {
-  
-  
-  const{username, password, name} = req.body   
+router.put("/:id", async function(req, res) {
+
+  const { username, password, name } = req.body
+  const id = req.params.id
+
+  if (req.user.id !== id) {
+    return res.status(403).json(
+      jsonResponse(403, {
+        error: "No puedes editar el perfil de otro usuario",
+      })
+    )
+  }
+
+  if (!username || !password || !name) {
+    return res.status(400).json(
+      jsonResponse(400, {
+        error: "username, password y name son requeridos",
+      })
+    )
+  }
+
   try {
-  
-  
-    const user = new User();
-    const userExists = await user.usernameExists(username);
-  
+    const userProbe = new User();
+    const userExists = await userProbe.usernameExists(username, id);
+
     if (userExists) {
-      
-      console.log('llega')
       return res.status(409).json(
         jsonResponse(409, {
           miss: "username already exists",
-        }))
-
-    }else{
-      const refreshToken = getTokenFromHeader(req.headers)
-
-      if(refreshToken){
-
-      
-
-        const id = req.params.id
-    const newname = req.params.newname
-    const newusername = req.params.newusername
-    let newpassword = req.params.newpassword
-
-      
-            bcrypt.hash(newpassword, 10, (err, hash) => {
-              if (err) {
-                next(err);
-              } else {
-                newpassword = hash;
-              
-                User.findByIdAndUpdate({_id: id}, {$set: {name: newname, username: newusername , password: newpassword }})
-                .then(doc =>{})
-                next();
-              }
-             
-            });
-        } 
-     
+        })
+      )
     }
-  
-   
+
+    const user = await User.findById(id)
+
+    if (!user) {
+      return res.status(404).json(jsonResponse(404, { error: "Usuario no encontrado" }))
+    }
+
+    user.name = name
+    user.username = username
+    user.password = password
+    await user.save()
+
+    return res.status(200).json(
+      jsonResponse(200, {
+        sucess: "Perfil actualizado",
+      })
+    )
   } catch (error) {
-    console.log(error)
-    res.status(400).json({response: 'fail'})
-  
+    console.error(error)
+    return res.status(500).json(jsonResponse(500, { error: "Ocurrió un problema" }))
   }
-  
-  });
+
+});
 
 
 router.delete("/delete/:id", async (req, res, )=> {
 
+  const id = req.params.id
+
+  if (req.user.id !== id) {
+    return res.status(403).json(
+      jsonResponse(403, {
+        error: "No puedes eliminar la cuenta de otro usuario",
+      })
+    )
+  }
+
   try {
-    const refreshToken = getTokenFromHeader(req.headers)
-    const id = req.params.id
-
-    if(refreshToken){
-      User.findByIdAndDelete({_id: id})
-.then(doc =>{
-  res.json({response: 'success'})
-})
-      }
-
-} catch (error) {
-    console.log(error)
-  
-}
-
+    await User.findByIdAndDelete(id)
+    return res.json({ response: 'success' })
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json(jsonResponse(500, { error: "Ocurrió un problema" }))
+  }
 
 })
 

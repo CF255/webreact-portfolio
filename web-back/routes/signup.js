@@ -10,11 +10,35 @@ const router = Router();
 
 
 router.post("/", upload.fields([{name: 'image', maxCount: 1}]),async function (req, res, next) {
-  
-  
- const{username, password, name} = req.body   
-  const image = req.files.image
+
+
+ const{username, password, name} = req.body
+  const image = req.files?.image
   const  body = req.body;
+
+  if (!username || !password || !name) {
+    return res.status(400).json(
+      jsonResponse(400, {
+        error: "username, password y name son requeridos",
+      })
+    );
+  }
+
+  if (password.length < 6) {
+    return res.status(400).json(
+      jsonResponse(400, {
+        error: "El password debe tener al menos 6 caracteres",
+      })
+    );
+  }
+
+  if (!image || image.length === 0) {
+    return res.status(400).json(
+      jsonResponse(400, {
+        error: "La imagen de perfil es requerida",
+      })
+    );
+  }
 
   try {
 
@@ -27,8 +51,8 @@ router.post("/", upload.fields([{name: 'image', maxCount: 1}]),async function (r
           miss: "Nombre de usuario registrado",
         })
       );
-      
-    } else if(image && image.length > 0){
+
+    } else {
         const {downloadURL} = await uploadFile(image[0])
     
         const user = await new User({
@@ -47,17 +71,10 @@ router.post("/", upload.fields([{name: 'image', maxCount: 1}]),async function (r
           user: user._id
         });
 
-        try {
-          const saveslide = await capaslide.save();
+        const saveslide = await capaslide.save();
         user.cardslide = user.cardslide.concat(saveslide._id);
         await user.save();
-  
-        } catch (error) {
-          console.error(error)
-        }
-        
-        user.save() 
-    
+
         return res.status(200).json(
           jsonResponse(200, {
             sucess: "Usuario creado",

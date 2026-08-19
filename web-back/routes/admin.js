@@ -13,7 +13,7 @@ const router = Router();
 router.get("/capacardslide", async (req, res, )=> {
 
   try {
-    const users =  await User.find({}).populate('cardslide', {
+    const users =  await User.find({}).select('-password').populate('cardslide', {
       cardslide: 1,
       tictac:1,
       apipelis: 1,
@@ -21,37 +21,37 @@ router.get("/capacardslide", async (req, res, )=> {
       messages: 1
 
     })
-    
-     res.status(200).json({users}) 
+
+     res.status(200).json({users})
 
 
 } catch (error) {
-    console.log(error)
-    res.status(500).send(error)
+    console.error(error)
+    res.status(500).json(jsonResponse(500, { error: "Ocurrio un problema" }))
 }
 
 
-}); 
+});
 
 router.get("/users/infocapaslider", async (req, res, )=> {
- 
+
 
   try {
-    const users =  await User.find({}).populate('cardslide', {
+    const users =  await User.find({}).select('-password').populate('cardslide', {
         cardslide: 1,
         tictac:1,
         apipelis: 1,
         giffy: 1,
         messages: 1
     })
-    res.json(users) 
-   
+    res.json(users)
+
 } catch (error) {
-    console.log(error)
-    res.status(500).send(error)
+    console.error(error)
+    res.status(500).json(jsonResponse(500, { error: "Ocurrio un problema" }))
 }
 
-}); 
+});
 
 
  router.put('/capslideoptions/:id', async(req, res)=>{
