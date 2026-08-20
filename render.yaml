@@ -4,8 +4,8 @@ services:
     runtime: docker
     plan: free
     region: oregon
-    dockerfilePath: ./web-back/Dockerfile
-    dockerContext: ./web-back
+    rootDir: web-back
+    dockerfilePath: ./Dockerfile
     healthCheckPath: /
     envVars:
       - key: DB_CONNECTION_STRING
