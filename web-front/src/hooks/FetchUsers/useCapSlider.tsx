@@ -12,7 +12,7 @@ export function useCapSlider  () {
     const [error, setError] = useState("")
     const auth = useAuth()
 
-    let fetchUsers = () =>{
+    const fetchUsers = () =>{
         setIsLoading(true)
         setError("")
         fetch(`${API_URL}/adminpage/capacardslide`,{

@@ -12,7 +12,7 @@ export function useUsers  () {
     const [error, setError] = useState("")
     const auth = useAuth()
 
-    let fetchUsers = () =>{
+    const fetchUsers = () =>{
         setIsLoading(true)
         setError("")
         fetch(`${API_URL}/perfil/users`,{

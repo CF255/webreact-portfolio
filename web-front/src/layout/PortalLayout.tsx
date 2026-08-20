@@ -22,16 +22,16 @@ import PerfilInformation from "../components/PortalLayout/PerfilInformation";
            const response = await fetch(`${API_URL}/signout`,{
                method: "DELETE",
                headers: {
-                   "Content-Type": "aaplication/json",
+                   "Content-Type": "application/json",
                    Authorization: `Bearer ${auth.getRefreshToken()}`
                }
            })
-    
+
            if(response.ok){
                auth.signout()
            }
        } catch (error) {
-           
+           console.error(error)
        }
       
     }

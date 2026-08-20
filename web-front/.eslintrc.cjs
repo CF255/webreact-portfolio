@@ -14,5 +14,11 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
+    // A chunk of this codebase predates strict typing and leans on `any`
+    // in event handlers / prop types. Tracked as a warning (visible in CI)
+    // rather than blocking builds — tightening these types is follow-up
+    // work, not something to rush through as part of unrelated changes.
+    '@typescript-eslint/no-explicit-any': 'warn',
+    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
   },
 }
