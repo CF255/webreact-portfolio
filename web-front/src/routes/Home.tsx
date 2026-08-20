@@ -108,14 +108,20 @@ export default function Home() {
           {NAV_LINKS.map((link) => (
             <a key={link.href} href={link.href} onClick={() => setMenuOpen(false)}>{link.label}</a>
           ))}
+          <a href={cvFile} download="Andrews-Fernandez-CV.pdf" onClick={() => setMenuOpen(false)}>Download CV</a>
           <Link to={auth.isAuthenticated ? "/dashboard" : "/login"} className="landing-nav-cta landing-nav-cta-mobile" onClick={() => setMenuOpen(false)}>
             {auth.isAuthenticated ? "Go to dashboard" : "Log in"}
           </Link>
         </nav>
 
-        <Link to={auth.isAuthenticated ? "/dashboard" : "/login"} className="landing-nav-cta landing-nav-cta-desktop">
-          {auth.isAuthenticated ? "Go to dashboard" : "Log in"}
-        </Link>
+        <div className="landing-nav-actions">
+          <a href={cvFile} download="Andrews-Fernandez-CV.pdf" className="landing-nav-cv">
+            <FontAwesomeIcon icon={faDownload} aria-hidden="true" /> CV
+          </a>
+          <Link to={auth.isAuthenticated ? "/dashboard" : "/login"} className="landing-nav-cta landing-nav-cta-desktop">
+            {auth.isAuthenticated ? "Go to dashboard" : "Log in"}
+          </Link>
+        </div>
 
         <button
           type="button"
@@ -132,6 +138,7 @@ export default function Home() {
 
       <section className="landing-hero">
         <h1>Andrews Luis Fernandez</h1>
+        <hr className="landing-hero-rule" />
         <p className="landing-hero-title">Full-Stack Developer</p>
         <p className="landing-hero-text">
           Full-Stack Developer with 3+ years of experience building scalable web and

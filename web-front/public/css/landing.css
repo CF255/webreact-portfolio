@@ -13,15 +13,23 @@ html {
 }
 
 .landing {
+  --ink: #202024;
+  --muted: #64636d;
+  --line: #dedde2;
+  --paper: #fbfaf9;
+  --paper-tint: #f5f4f2;
+  --accent: #202024;
+  --accent-soft: #45454b;
+
   font-family: 'Poppins', system-ui, sans-serif;
-  color: #23242a;
-  background: #fbfbfe;
+  color: var(--ink);
+  background: var(--paper);
   min-height: 100vh;
 }
 
 .landing a:focus-visible,
 .landing button:focus-visible {
-  outline: 2px solid #7494ec;
+  outline: 2px solid var(--ink);
   outline-offset: 2px;
 }
 
@@ -29,49 +37,84 @@ html {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 1rem;
   padding: 1.25rem 2rem;
   position: sticky;
   top: 0;
-  background: rgba(251, 251, 254, 0.9);
+  background: rgba(251, 250, 249, 0.92);
   backdrop-filter: blur(6px);
   z-index: 10;
-  border-bottom: 1px solid #eceaf6;
+  border-bottom: 1px solid var(--line);
 }
 
 .landing-nav-brand {
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .landing-nav-links {
   display: flex;
+  align-items: center;
   gap: 1.5rem;
+  margin-right: auto;
+  margin-left: 1.5rem;
 }
 
 .landing-nav-links a {
-  color: #5b5871;
+  color: var(--muted);
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
   transition: color 0.15s ease;
 }
 
 .landing-nav-links a:hover {
-  color: #7494ec;
+  color: var(--ink);
+}
+
+.landing-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.landing-nav-cv {
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  padding: 0.45rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 30px;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.landing-nav-cv:hover {
+  border-color: var(--ink);
+  background: var(--paper-tint);
 }
 
 .landing-nav-cta {
-  background: #7494ec;
+  background: var(--ink);
   color: #fff;
   padding: 0.5rem 1.1rem;
   border-radius: 30px;
   text-decoration: none;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
   transition: background 0.15s ease;
 }
 
 .landing-nav-cta:hover {
-  background: #5c7de0;
+  background: var(--accent-soft);
 }
 
 .landing-nav-cta-mobile {
@@ -95,7 +138,7 @@ html {
   display: block;
   width: 100%;
   height: 2px;
-  background: #23242a;
+  background: var(--ink);
   border-radius: 2px;
 }
 
@@ -108,17 +151,31 @@ html {
 
 .landing-hero h1 {
   font-size: 2.4rem;
-  margin: 0 0 0.25rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  margin: 0 0 1rem;
+}
+
+.landing-hero-rule {
+  width: 64px;
+  height: 2px;
+  background: var(--ink);
+  border: none;
+  margin: 0 auto 1rem;
 }
 
 .landing-hero-title {
-  color: #7494ec;
+  color: var(--muted);
   font-weight: 600;
-  margin: 0 0 1.25rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  margin: 0 0 1.5rem;
 }
 
 .landing-hero-text {
-  color: #5b5871;
+  color: var(--muted);
   line-height: 1.6;
   margin: 0 auto 2rem;
   max-width: 620px;
@@ -137,23 +194,25 @@ html {
   gap: 0.5rem;
   padding: 0.7rem 1.5rem;
   border-radius: 30px;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
   cursor: pointer;
   border: 1px solid transparent;
   text-decoration: none;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
 .landing-btn-solid {
-  background: #7494ec;
+  background: var(--ink);
   color: #fff;
-  border-color: #7494ec;
+  border-color: var(--ink);
 }
 
 .landing-btn-solid:hover:not(:disabled) {
-  background: #5c7de0;
-  box-shadow: 0 6px 16px rgba(116, 148, 236, 0.35);
+  background: var(--accent-soft);
+  box-shadow: 0 6px 16px rgba(32, 32, 36, 0.25);
   transform: translateY(-1px);
 }
 
@@ -164,55 +223,62 @@ html {
 
 .landing-btn-outline {
   background: transparent;
-  color: #23242a;
-  border-color: #cfcbe8;
+  color: var(--ink);
+  border-color: var(--line);
 }
 
 .landing-btn-outline:hover {
-  border-color: #7494ec;
-  color: #7494ec;
+  border-color: var(--ink);
   transform: translateY(-1px);
 }
 
 .landing-eyebrow {
-  color: #7494ec;
-  font-size: 0.78rem;
+  color: var(--muted);
+  font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   margin-bottom: 0.5rem;
 }
 
 .landing-hero-error {
-  color: #c0392b;
+  color: #b3261e;
   font-size: 0.85rem;
   margin-top: 1rem;
 }
 
 .landing-hero-subtext {
-  color: #5b5871;
+  color: var(--muted);
   font-size: 0.8rem;
   margin-top: 1.5rem;
 }
 
 .landing-hero-subtext a {
-  color: #7494ec;
+  color: var(--ink);
+  font-weight: 600;
 }
 
 .landing-section {
   max-width: 860px;
   margin: 0 auto;
   padding: 3rem 1.5rem;
-  border-top: 1px solid #eceaf6;
+  border-top: 1px solid var(--line);
 }
 
 .landing-section h2 {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   margin-bottom: 1.25rem;
 }
 
 .landing-subheading {
-  font-size: 1.1rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
   margin-top: 2rem;
 }
 
@@ -223,11 +289,12 @@ html {
 }
 
 .landing-skill-tag {
-  background: #f1efff;
-  color: #4a4870;
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line);
   padding: 0.4rem 0.9rem;
   border-radius: 20px;
-  font-size: 0.82rem;
+  font-size: 0.8rem;
 }
 
 .landing-experience-list {
@@ -238,12 +305,14 @@ html {
 
 .landing-experience-item h3 {
   margin: 0;
-  font-size: 1.05rem;
+  font-size: 1rem;
+  font-weight: 700;
 }
 
 .landing-experience-company {
-  color: #7494ec;
-  font-size: 0.85rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-style: italic;
   margin: 0.15rem 0 0.6rem;
 }
 
@@ -252,7 +321,7 @@ html {
 .landing-education-list {
   margin: 0;
   padding-left: 1.2rem;
-  color: #5b5871;
+  color: var(--muted);
   font-size: 0.9rem;
   line-height: 1.6;
 }
@@ -263,18 +332,19 @@ html {
 }
 
 .landing-project-card {
-  background: #f8f7fd;
-  border: 1px solid #eceaf6;
+  background: var(--paper-tint);
+  border: 1px solid var(--line);
   border-radius: 16px;
   padding: 1.75rem;
 }
 
 .landing-project-card h3 {
   margin-top: 0;
+  font-weight: 700;
 }
 
 .landing-project-card > p {
-  color: #5b5871;
+  color: var(--muted);
   line-height: 1.6;
 }
 
@@ -300,24 +370,26 @@ html {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  color: #5b5871;
+  color: var(--muted);
 }
 
 .landing-contact-list a {
-  color: #23242a;
+  color: var(--ink);
   text-decoration: none;
   transition: color 0.15s ease;
 }
 
 .landing-contact-list a:hover {
-  color: #7494ec;
+  color: var(--muted);
+  text-decoration: underline;
 }
 
 .landing-footer {
   text-align: center;
   padding: 2rem 1.5rem 3rem;
-  color: #5b5871;
+  color: var(--muted);
   font-size: 0.8rem;
+  letter-spacing: 0.03em;
 }
 
 @media (max-width: 640px) {
@@ -329,7 +401,8 @@ html {
     display: flex;
   }
 
-  .landing-nav-cta-desktop {
+  .landing-nav-actions .landing-nav-cta,
+  .landing-nav-cv {
     display: none;
   }
 
@@ -342,9 +415,10 @@ html {
     flex-direction: column;
     align-items: flex-start;
     gap: 0;
-    background: #fbfbfe;
-    border-bottom: 1px solid #eceaf6;
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
     padding: 0.5rem 1.25rem 1rem;
+    margin: 0;
   }
 
   .landing-nav-links-open {
@@ -354,7 +428,7 @@ html {
   .landing-nav-links a {
     width: 100%;
     padding: 0.75rem 0;
-    border-bottom: 1px solid #f1efff;
+    border-bottom: 1px solid var(--paper-tint);
   }
 
   .landing-nav-cta-mobile {
@@ -367,7 +441,7 @@ html {
   }
 
   .landing-hero h1 {
-    font-size: 1.9rem;
+    font-size: 1.7rem;
   }
 
   .landing-section {
