@@ -5,8 +5,9 @@ import "/public/css/chatmessages.css"
 import Users from "../components/Chat/users";
 import Chat from "../components/Chat/chat";
 import { useUsers } from "../hooks/FetchUsers/useUser";
+import { SOCKET_URL } from "../auth/constants";
 
-const socket = io.connect("http://localhost:3100")
+const socket = io.connect(SOCKET_URL)
 
 export default function Messages(){
 
