@@ -1,6 +1,7 @@
 import jsonResponse from "../lib/jsonResponse.js";
 import log from "../lib/trace.js";
 import User from "../schema/user.js";
+import isOwner from "../lib/isOwner.js";
 import { Router } from 'express'
 
 
@@ -75,7 +76,7 @@ router.put("/:id", async function(req, res) {
   const { username, password, name } = req.body
   const id = req.params.id
 
-  if (req.user.id !== id) {
+  if (!isOwner(id, req.user.id)) {
     return res.status(403).json(
       jsonResponse(403, {
         error: "No puedes editar el perfil de otro usuario",
@@ -131,7 +132,7 @@ router.delete("/delete/:id", async (req, res, )=> {
 
   const id = req.params.id
 
-  if (req.user.id !== id) {
+  if (!isOwner(id, req.user.id)) {
     return res.status(403).json(
       jsonResponse(403, {
         error: "No puedes eliminar la cuenta de otro usuario",

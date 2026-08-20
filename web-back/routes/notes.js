@@ -3,6 +3,7 @@ import { Router } from 'express'
 import Note from "../schema/note.js";
 import User from "../schema/user.js";
 import jsonResponse from '../lib/jsonResponse.js';
+import isOwner from '../lib/isOwner.js';
 
 
 const router = Router();
@@ -72,7 +73,7 @@ router.put('/:id', async(req, res)=>{
             return res.status(404).json(jsonResponse(404, { error: "Nota no encontrada" }))
         }
 
-        if (note.user.toString() !== req.user.id) {
+        if (!isOwner(note.user, req.user.id)) {
             return res.status(403).json(jsonResponse(403, { error: "No puedes editar la nota de otro usuario" }))
         }
 
@@ -104,7 +105,7 @@ router.put('/fav/:id', async(req, res)=>{
           return res.status(404).json(jsonResponse(404, { error: "Nota no encontrada" }))
       }
 
-      if (favRef.user.toString() !== req.user.id) {
+      if (!isOwner(favRef.user, req.user.id)) {
           return res.status(403).json(jsonResponse(403, { error: "No puedes editar la nota de otro usuario" }))
       }
 
@@ -141,7 +142,7 @@ router.delete('/:id', async(req, res)=>{
             return res.status(404).json(jsonResponse(404, { error: "Nota no encontrada" }))
         }
 
-        if (note.user.toString() !== req.user.id) {
+        if (!isOwner(note.user, req.user.id)) {
             return res.status(403).json(jsonResponse(403, { error: "No puedes borrar la nota de otro usuario" }))
         }
 
