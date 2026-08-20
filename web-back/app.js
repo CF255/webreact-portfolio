@@ -96,6 +96,11 @@ app.get("/", (req, res)=>{
     res.send('hello')
 })
 
+app.use((err, req, res, next) => {
+    console.error(err)
+    res.status(err.status || 500).json({ error: "Ocurrió un problema" })
+})
+
 server.listen(port,()=>{
     console.log(`server is running on port: ${port}`)
 })
