@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "../auth/AuthProvider";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useNavigate, Link } from "react-router-dom";
 import { AuthResponse, AuthResponseError } from "../types/types";
 import { API_URL } from "../auth/constants";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
@@ -88,6 +88,7 @@ if (auth.isAuthenticated) {
     <div className="forms-container">
         <div className="signin-signup">
         <form  onSubmit={handleSubmit}  className="sign-up-form">
+    <Link to="/" style={{alignSelf: 'flex-start', color: '#565656', fontSize: '0.85rem', marginBottom: '0.5rem', textDecoration: 'none'}}>&larr; Volver al inicio</Link>
     <h1 className="title">Sign Up</h1>
 
      <div className="modalmessage">

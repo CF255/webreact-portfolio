@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useAuth } from "../auth/AuthProvider";
-import { Navigate, useNavigate } from "react-router-dom";
-import { API_URL } from "../auth/constants";
-import { AuthResponse, AuthResponseError } from "../types/types";
+import { Navigate, useNavigate, Link } from "react-router-dom";
+import { loginRequest } from "../auth/loginRequest";
+import { AuthResponseError } from "../types/types";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
 import { faUser, faLock} from "@fortawesome/free-solid-svg-icons";
 import { faFacebook, faGithub, faGoogle, faInstagram } from "@fortawesome/free-brands-svg-icons";
@@ -28,42 +28,14 @@ export default function Login(){
 
     async function doLogin(loginUsername: string, loginPassword: string){
         try {
-            const response = await fetch(`${API_URL}/login`,{
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    username: loginUsername,
-                    password: loginPassword
-                })
-            })
-
-            if(response.ok){
-                console.log("login succesfull")
-                setErrorResponse("")
-                const json = (await response.json()) as AuthResponse
-                
-                if(json.body.accessToken && json.body.refreshToken){
-                    auth.saveUser(json)
-
-                 
-                
-                        goTo(`/dashboard`)
-                }
-
-               
-            }else{
-                console.log("algo salio mal")
-                const json = await response.json() as AuthResponseError;
-                setErrorResponse(json.body.error)
-                setMissResponse(json.body.miss)
-                return
-
-            }
+            const json = await loginRequest(loginUsername, loginPassword)
+            setErrorResponse("")
+            auth.saveUser(json)
+            goTo(`/dashboard`)
         } catch (error) {
-            console.log(error)
-
+            const json = error as AuthResponseError
+            setErrorResponse(json.body?.error)
+            setMissResponse(json.body?.miss)
         }
     }
 
@@ -96,6 +68,7 @@ export default function Login(){
             <div className="forms-container">
                 <div className="signin-signup">
                 <form onSubmit={handleSubmit} className="sign-in-form">
+            <Link to="/" style={{alignSelf: 'flex-start', color: '#565656', fontSize: '0.85rem', marginBottom: '0.5rem', textDecoration: 'none'}}>&larr; Volver al inicio</Link>
             <h1 className="title">Login</h1>
             
             <div className="modalmessage">

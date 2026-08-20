@@ -127,9 +127,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }
 
   useEffect(() => {
-    setTimeout(() => {
-      checkAuth();
-    }, 1000);
+    checkAuth();
   }, []);
 
 

@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import Home from './routes/Home.tsx'
 import Signup from './routes/Signup.tsx'
 import Login from './routes/Login.tsx'
 import Dashboard from './routes/Dashboard.tsx'
@@ -22,6 +23,10 @@ import AdminPage from './routes/AdminPage.tsx'
 const router = createBrowserRouter([
 
 {
+  path: "/",
+  element: <Home/>
+},
+{
   path: "/login",
   element: <Login/>
 },
@@ -30,7 +35,6 @@ const router = createBrowserRouter([
   element: <Signup/>
 },
 {
-  path: "/",
   element: <ProtectedRoute/>,
   children:[
     {
