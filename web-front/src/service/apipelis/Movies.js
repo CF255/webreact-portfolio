@@ -1,5 +1,5 @@
 
-const API_KEY = '4287ad07'
+const API_KEY = import.meta.env.VITE_OMDB_API_KEY
 
 export const searchMovies = async ({ search }) =>{
     if(search === '') return null

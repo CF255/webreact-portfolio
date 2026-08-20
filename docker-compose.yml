@@ -13,6 +13,8 @@ services:
       args:
         VITE_API_URL: http://localhost:3100/api
         VITE_SOCKET_URL: http://localhost:3100
+        VITE_OMDB_API_KEY: ${VITE_OMDB_API_KEY:-}
+        VITE_GIPHY_API_KEY: ${VITE_GIPHY_API_KEY:-}
     ports:
       - "8080:80"
     depends_on:
