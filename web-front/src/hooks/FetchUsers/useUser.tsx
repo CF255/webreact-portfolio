@@ -8,16 +8,22 @@ import { useAuth } from "../../auth/AuthProvider";
 export function useUsers  () {
 
     const [users, setUsers] = useState<User[] | []>([])
+    const [isLoading, setIsLoading] = useState(true)
+    const [error, setError] = useState("")
     const auth = useAuth()
 
     let fetchUsers = () =>{
+        setIsLoading(true)
+        setError("")
         fetch(`${API_URL}/perfil/users`,{
             headers: {
-              "Content-Type": "aplication/json",
+              "Content-Type": "application/json",
               Authorization: `Bearer ${auth.getAccessToken()}`,
             }
             }).then(res => res.json())
             .then((data: {users: User[]}) => setUsers(data.users))
+            .catch(() => setError("No se pudieron cargar los usuarios"))
+            .finally(() => setIsLoading(false))
     }
 
 
@@ -26,9 +32,6 @@ export function useUsers  () {
     }, [])
 
     return (
-      {users, refetchUsers: fetchUsers}
-      
-          
-       
+      {users, isLoading, error, refetchUsers: fetchUsers}
     )
 }

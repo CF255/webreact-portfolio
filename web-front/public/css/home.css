@@ -17,3 +17,12 @@
     background-color: red;
 }
 
+.dashboard-status{
+    color: #777;
+    padding: 1rem 0;
+}
+
+.dashboard-status-error{
+    color: #c0392b;
+}
+

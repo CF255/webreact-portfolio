@@ -25,7 +25,7 @@ export default function Dashboard(){
 
 const auth = useAuth()
 
-        const {users} = useCapSlider() 
+        const {users, isLoading, error} = useCapSlider()
         const id = auth.getUser()?.id
 
         const u = users.find(a => a.id === String(id))
@@ -90,6 +90,9 @@ const auth = useAuth()
     
 
                 {/* carrousel card */}
+
+                {isLoading && <p className="dashboard-status">Cargando...</p>}
+                {!!error && <p className="dashboard-status dashboard-status-error">{error}</p>}
 
                 {!!cardId && <>
 

@@ -1,5 +1,6 @@
 import { PortalLayout } from "../layout/PortalLayout";
 import "../../public/css/notes.css"
+import "../../public/css/home.css"
 import NamePerfils from "../components/Perfil/NamePerfils";
 import { useUsers } from "../hooks/FetchUsers/useUser";
 import ActionButton from "../components/Notes/ActionButton";
@@ -25,40 +26,25 @@ export default function Notes(){
     const [ editeNoteResponse, setEditeNoteResponse] = useState("");
     const [ createNoteResponse, setCreateNoteResponse] = useState("");
     const [visiblestartactive] = useState(true);
-    const [visiblestartDesactive, setVisiblestartDesactive] = useState(false); 
- 
-    const {users} = useUsers()  
+    const [isLoadingNotes, setIsLoadingNotes] = useState(true);
+    const [notesError, setNotesError] = useState("");
+
+    const {users} = useUsers()
     const auth = useAuth()
-    const id = useParams().id 
+    const id = useParams().id
     const n = notes.find(a => a.id === String(id))
     const note = n?.notes
 
-  
     const fav = note?.find((fav)=> fav.favorite === true) || 'vacio'
+    const visiblestartDesactive = fav === 'vacio'
 
 useEffect(() =>{
     getnote()
 }, [])
 
 
-setTimeout(() => {
-    comprobar()
-}, 10);
- 
-
-
-function comprobar(){
-
-    if(fav === 'vacio'){
-            setVisiblestartDesactive(true)
-        }else{
-            setVisiblestartDesactive(false)
-        } 
-}
-
-
    async function addfav(id: string) {
-        
+
     try {
         const response =await fetch(`${API_URL}/notes/fav/${id}`, {
             method: "PUT",
@@ -74,18 +60,14 @@ function comprobar(){
     } catch (error) {
         console.log(error)
     }
-} 
+}
 
    async function handlestarDesactive (id: any){
     await addfav(id)
-    setVisiblestartDesactive(true) 
-    getnote()
 }
 
 async function handlestarActive (id: any){
     await addfav(id)
-    setVisiblestartDesactive(false) 
-   getnote()
 }
 
    function istrue(favorite: any, id: any){
@@ -124,27 +106,39 @@ async function handlestarActive (id: any){
  async function getNotes(){
 
     try {
-        
+
         const response = await fetch(`${API_URL}/perfil/users/info`,{
             headers: {
-                "Content-Type": "aplication/json",
+                "Content-Type": "application/json",
                 Authorization: `Bearer ${auth.getAccessToken()}`
             }
         })
-        const data = await response.json()
-        return data
-        
+
+        if (!response.ok) {
+            throw new Error("request failed")
+        }
+
+        return await response.json()
+
     } catch (error) {
         console.log(error)
-  
+        throw error
     }
-  } 
+  }
 
- 
+
    async function getnote() {
-    const notes = await getNotes()
-    setNotes(notes)
-  } 
+    setIsLoadingNotes(true)
+    setNotesError("")
+    try {
+        const notes = await getNotes()
+        setNotes(notes)
+    } catch (error) {
+        setNotesError("No se pudieron cargar las notas")
+    } finally {
+        setIsLoadingNotes(false)
+    }
+  }
 
    async function handleonEdit(){
     setNoteToEdit(null)
@@ -239,6 +233,9 @@ async function deleteNote(id:string) {
                 </div>
 
                 <ActionButton onClick={() => setCreateNotemodalOpen(true)}/>
+
+             {isLoadingNotes && <p className="dashboard-status">Cargando notas...</p>}
+             {!!notesError && <p className="dashboard-status dashboard-status-error">{notesError}</p>}
 
              <div className="cardNoteGrid">
              {note?.map((n)=>(
