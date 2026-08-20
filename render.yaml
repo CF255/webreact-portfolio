@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: webreact-backend
+    runtime: docker
+    plan: free
+    region: oregon
+    dockerfilePath: ./web-back/Dockerfile
+    dockerContext: ./web-back
+    healthCheckPath: /
+    envVars:
+      - key: DB_CONNECTION_STRING
+        sync: false
+      - key: ACCESS_TOKEN_SECRET
+        sync: false
+      - key: REFRESH_TOKEN_SECRET
+        sync: false
+      - key: ALLOWED_ORIGINS
+        sync: false
