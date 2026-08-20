@@ -1,117 +1,172 @@
-
 # WebReact
 
-<p>
-Proyecto de portafolio full-stack: un portal/dashboard con autenticación real, notas, chat en tiempo real y un panel de administración, pensado para mostrarse públicamente a recruiters/entrevistadores sin necesidad de crear una cuenta.
-</p>
+[![CI](https://github.com/CF255/webreact-portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/CF255/webreact-portfolio/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 
-## Stack tecnológico
+Full-stack portfolio piece by **[Andrews Luis Fernandez](https://webreact-portfolio.vercel.app)**: a portal/dashboard app with real authentication, notes, real-time chat, and an admin panel — built to be explored publicly by recruiters/interviewers without creating an account.
+
+**Live demo:** [webreact-portfolio.vercel.app](https://webreact-portfolio.vercel.app) — click "Explore the app (demo)" on the landing page, no signup needed.
+
+---
+
+## Contents
+
+- [Architecture](#architecture)
+- [Tech stack](#tech-stack)
+- [Features](#features)
+- [Technical highlights](#technical-highlights)
+- [Project structure](#project-structure)
+- [Getting started](#getting-started)
+- [Environment variables](#environment-variables)
+- [Running with Docker](#running-with-docker)
+- [Tests](#tests)
+- [CI/CD](#cicd)
+- [Deployment](#deployment)
+- [Login](#login)
+- [Known limitations](#known-limitations)
+
+## Architecture
+
+```mermaid
+flowchart LR
+    subgraph Client
+        Browser["Browser (React SPA)"]
+    end
+
+    subgraph Vercel["Vercel — static hosting"]
+        Frontend["web-front (Vite build)"]
+    end
+
+    subgraph Render["Render — Docker container"]
+        Backend["web-back (Express + Socket.IO)"]
+    end
+
+    Atlas[("MongoDB Atlas")]
+
+    Browser -- "loads SPA" --> Frontend
+    Browser -- "REST (fetch) + WebSocket" --> Backend
+    Backend -- "Mongoose" --> Atlas
+```
+
+- **Frontend**: React SPA, statically built and served from Vercel. Talks to the backend only via `fetch`/WebSocket over the public internet — no server-side rendering, no direct DB access.
+- **Backend**: single Express process that serves the REST API and a Socket.IO server on the same port, containerized and deployed on Render.
+- **Database**: MongoDB Atlas (managed, cloud-hosted) — the backend is the only thing that talks to it.
+
+## Tech stack
 
 ### Frontend (`web-front`)
 - React 18 + TypeScript + Vite
-- `react-router-dom` v6 para el ruteo de la app y `wouter` para el sub-router del módulo de giffy
-- `fetch` nativo para las llamadas HTTP contra la API
-- `socket.io-client` para el chat en tiempo real
-- Bootstrap / CSS por módulo (`public/css/*.css`) + FontAwesome para iconografía
-- Vitest + Testing Library para tests
+- `react-router-dom` v6 for app routing, `wouter` for the giffy module's sub-router
+- Native `fetch` for HTTP, `socket.io-client` for real-time chat
+- Bootstrap / per-module CSS (`public/css/*.css`) + FontAwesome
+- Vitest + Testing Library for tests
 
 ### Backend (`web-back`)
 - Node.js + Express (ES Modules)
 - MongoDB + Mongoose
-- Socket.IO (servidor) para mensajería en tiempo real
-- JSON Web Tokens (`jsonwebtoken`) con esquema de access token + refresh token, revocable en logout
-- `bcrypt` para el hasheo de contraseñas
-- `helmet` + `express-rate-limit` en login/signup
-- Vitest para tests
+- Socket.IO for real-time messaging
+- JWT (`jsonwebtoken`) with access + refresh token, revocable on logout
+- `bcrypt` for password hashing
+- `helmet` + `express-rate-limit` on login/signup
+- Vitest for tests
 
-## Estructura del proyecto
+## Features
+
+- **Public landing page** at `/` — About, skills, experience, featured project, contact. No login required.
+- **Authentication** (signup / login / logout) with dual JWT: short-lived access token + a refresh token persisted in MongoDB so it can be revoked. Session survives a page reload.
+- **Public demo account** (see [Login](#login)) so anyone can try the authenticated app without registering.
+- **Notes (CRUD)** per user, with ownership checks — you can't edit or delete someone else's note.
+- **User profiles**: view/edit your own data, list other users.
+- **Admin panel**: toggle which dashboard modules each user can see.
+- **Real-time chat** over Socket.IO, with conversation rooms.
+- **Extra mini-modules**: tic-tac-toe, movie search, GIF search.
+
+## Technical highlights
+
+Things in this codebase that are worth a closer look if you're reviewing it:
+
+- **Dual-token auth with real revocation** — refresh tokens are persisted server-side (`schema/token.js`) and deleted on logout, not just discarded client-side.
+- **Ownership checks extracted to a single tested helper** (`lib/isOwner.js`) — used by both the notes and profile routes so the "can this user touch this resource" rule only lives in one place, and is unit-tested there instead of re-verified per route.
+- **CORS via an env-driven allowlist**, not a wildcard — `ALLOWED_ORIGINS` is a comma-separated list checked per-request in `app.js`, covering both the REST API and the Socket.IO handshake.
+- **Route-level code splitting** — the authenticated app (dashboard, chat, notes, admin, mini-games) is loaded with `React.lazy` behind a `Suspense` boundary, so a first-time visitor to the public landing page doesn't download that code at all.
+- **CI mirrors what actually ships**: lint + unit tests + production build run on every push, and a separate job builds both Docker images to catch Dockerfile regressions — see [CI/CD](#cicd).
+
+## Project structure
 
 ```
 Portafolios/
-├── web-back/          # API REST + servidor de Socket.IO
-│   ├── app.js          # punto de entrada, monta rutas, CORS y Socket.IO
-│   ├── auth/            # generación/validación de JWT
-│   ├── lib/               # helpers (respuestas JSON, logger, ownership, info de usuario)
-│   ├── routes/                # endpoints agrupados por dominio
-│   ├── schema/                 # modelos de Mongoose
-│   └── scripts/                 # seed de la cuenta demo
-└── web-front/          # SPA de React
+├── web-back/          # REST API + Socket.IO server
+│   ├── app.js          # entry point — mounts routes, CORS, Socket.IO
+│   ├── auth/            # JWT generation/verification
+│   ├── lib/               # helpers (JSON response, logger, ownership, user info)
+│   ├── routes/                # endpoints grouped by domain
+│   ├── schema/                 # Mongoose models
+│   └── scripts/                 # demo account seed
+└── web-front/          # React SPA
     └── src/
-        ├── auth/         # AuthProvider, manejo de tokens
-        ├── components/    # UI organizada por feature
-        ├── hooks/            # hooks de datos por feature
-        ├── layout/            # layout del portal (header, menú)
-        ├── routes/               # páginas, incluida la landing pública (Home.tsx)
-        └── types/                   # tipos TypeScript compartidos
+        ├── auth/         # AuthProvider, token handling
+        ├── components/    # UI organized by feature
+        ├── hooks/            # data hooks by feature
+        ├── layout/            # portal layout (header, menu)
+        ├── routes/               # pages, including the public landing (Home.tsx)
+        └── types/                   # shared TypeScript types
 ```
 
-## Funcionalidades principales
+## Getting started
 
-- **Landing pública** en `/` con About, Skills, Experience, proyecto destacado y contacto — no requiere login.
-- **Autenticación (signup / login / logout)** con JWT de doble token: `accessToken` de corta duración y `refreshToken` persistido en MongoDB para poder revocarlo. La sesión se renueva automáticamente al recargar la página.
-- **Cuenta demo pública** (ver sección Login) para explorar la app autenticada sin registrarse.
-- **Gestión de notas (CRUD)** por usuario, con control de ownership (no se puede editar/borrar notas de otro).
-- **Perfil de usuario**: ver y editar datos propios, listar otros usuarios.
-- **Panel de administración**: activa/desactiva por usuario qué módulos ve en su dashboard.
-- **Chat en tiempo real** vía Socket.IO, con salas de conversación.
-- **Mini-módulos adicionales**: tres en raya, buscador de películas, buscador de GIFs.
-
-## Instalación
-
-Clona el repositorio. Luego, en una terminal dentro de `web-front` ejecuta `npm install`, y en otra dentro de `web-back` ejecuta también `npm install`.
-
-### Variables de entorno del backend
-
-Copiá `web-back/.env.example` a `web-back/.env` y completá:
+Clone the repo, then install dependencies in both projects:
 
 ```
-DB_CONNECTION_STRING     # cadena de conexión a MongoDB
-ACCESS_TOKEN_SECRET      # secreto para firmar el access token
-REFRESH_TOKEN_SECRET     # secreto para firmar el refresh token
-ALLOWED_ORIGINS          # orígenes permitidos por CORS, separados por coma
-PORT                     # opcional, por defecto 3100
+cd web-front && npm install
+cd ../web-back && npm install
 ```
 
-### Variables de entorno del frontend
-
-Copiá `web-front/.env.example` a `web-front/.env` (los valores por defecto ya apuntan a `localhost:3100`, así que esto es opcional para desarrollo local):
+### Run in development
 
 ```
-VITE_API_URL       # URL base de la API (termina en /api)
-VITE_SOCKET_URL    # URL base del servidor de Socket.IO
+# backend — http://localhost:3100
+cd web-back && npx nodemon app
+
+# frontend — http://localhost:5173
+cd web-front && npm run dev
 ```
 
-## Correr en desarrollo
+## Environment variables
 
-#### Backend
-```
-cd web-back
-npx nodemon app
-```
-Levanta la API + Socket.IO en `http://localhost:3100`.
+### Backend (`web-back/.env`, copy from `.env.example`)
 
-#### Frontend
 ```
-cd web-front
-npm run dev
+DB_CONNECTION_STRING     # MongoDB connection string
+ACCESS_TOKEN_SECRET      # access token signing secret
+REFRESH_TOKEN_SECRET     # refresh token signing secret
+ALLOWED_ORIGINS          # comma-separated list of allowed CORS origins
+PORT                     # optional, defaults to 3100
 ```
-Levanta Vite en `http://localhost:5173`.
 
-## Correr con Docker
+### Frontend (`web-front/.env`, copy from `.env.example`)
 
-Requiere Docker y un `web-back/.env` ya configurado (ver arriba).
+Optional for local dev — defaults already point at `localhost:3100`.
+
+```
+VITE_API_URL       # backend API base URL (ends in /api)
+VITE_SOCKET_URL    # backend Socket.IO base URL
+```
+
+## Running with Docker
+
+Requires Docker and a configured `web-back/.env`.
 
 ```
 docker compose build
 docker compose up -d
 ```
 
-- Frontend (nginx sirviendo el build de producción): `http://localhost:8080`
+- Frontend (nginx serving the production build): `http://localhost:8080`
 - Backend: `http://localhost:3100`
 
-Nota: Vite compila las variables `VITE_*` en tiempo de build, no en runtime. Si cambiás `VITE_API_URL`/`VITE_SOCKET_URL`, hay que reconstruir la imagen del frontend (`docker compose build frontend`). Los valores para Docker se pasan como build args en `docker-compose.yml`.
+Vite compiles `VITE_*` variables at build time, not at runtime — changing `VITE_API_URL`/`VITE_SOCKET_URL` requires rebuilding the frontend image (`docker compose build frontend`). Docker-specific values are passed as build args in `docker-compose.yml`.
 
-Para bajar el stack: `docker compose down`.
+Stop the stack with `docker compose down`.
 
 ## Tests
 
@@ -120,21 +175,36 @@ cd web-back && npm test
 cd web-front && npm test
 ```
 
-Cobertura mínima pero enfocada en lo crítico: JWT (roundtrip y rechazo de tokens inválidos), verificación de password, la lógica de ownership que evita que un usuario edite/borre recursos de otro, y un smoke test de la landing pública.
+Deliberately minimal but focused on what matters: JWT roundtrip and rejection of invalid tokens, password verification against a hash, the ownership logic that stops one user from editing/deleting another's resources, and a smoke test of the public landing page.
 
-> Nota de compatibilidad: Vitest está fijado en `2.1.9` (y `jsdom` en `25.x` en el frontend) porque las versiones más nuevas requieren Node 20+; esta configuración corre en Node 18.
+> Compatibility note: Vitest is pinned to `2.1.9` (and `jsdom` to `25.x` on the frontend) because newer versions require Node 20+; this setup targets Node 18.
+
+## CI/CD
+
+`.github/workflows/ci.yml` runs on every push/PR to `main`:
+
+| Job | What it does |
+|---|---|
+| `backend` | `npm ci` + `npm test` |
+| `frontend` | `npm ci` + lint + test + production build |
+| `docker-build` | builds both Docker images (depends on the two jobs above passing) |
+
+## Deployment
+
+| Piece | Where | Notes |
+|---|---|---|
+| Frontend | [Vercel](https://vercel.com) | Static build of `web-front`, deployed from `main`. SPA fallback via `vercel.json`. |
+| Backend | [Render](https://render.com) | Docker deploy of `web-back` (`render.yaml`), free plan. |
+| Database | [MongoDB Atlas](https://www.mongodb.com/atlas) | Managed cluster, no self-hosted DB. |
+
+The backend's free Render plan spins down after inactivity — the first request after a while can take a few seconds to wake it up. That's expected for a portfolio project, not a bug.
 
 ## Login
 
-<p>
-Hay una cuenta demo siempre activa para explorar la app sin crear una cuenta: usuario <code>demo</code>, password <code>demo1234</code> (o el botón "Ver demo sin registrarse" / "Explore the app (demo)" en la landing y en el login). También podés crear tu propia cuenta desde la página de registro.
-</p>
+There's an always-on demo account so anyone can explore the authenticated app without registering: username `demo`, password `demo1234` — or just click "Explore the app (demo)" on the landing page or the login screen. You can also create your own account from the signup page.
 
-## Estado del proyecto
+## Known limitations
 
-Proyecto en desarrollo activo, migrando de un ejercicio de aprendizaje a un portafolio profesional. Fases completadas hasta ahora: auditoría de seguridad, corrección de bugs críticos (IDOR, CORS abierto, filtración de passwords), limpieza de código muerto y dependencias, landing pública, tests mínimos y containerización con Docker.
-
-Pendiente conocido:
-- El bundle principal del frontend ronda 1.2MB (las rutas de la app ya están code-splitteadas con `React.lazy`; falta separar dependencias más grandes del bundle inicial).
-- Quedan algunas vulnerabilidades moderadas/altas en `vite`/`react-router-dom` cuya corrección implica un salto de major version — se dejaron pendientes de una revisión aparte para no arriesgar estabilidad.
-- Cobertura de tests deliberadamente mínima, no exhaustiva.
+- The frontend's main bundle is still ~1.2MB — the authenticated app's routes are already code-split with `React.lazy`, but some large shared dependencies haven't been split out of the initial chunk yet.
+- A handful of moderate/high vulnerabilities remain in `vite`/`react-router-dom` transitive dependencies; fixing them means a major-version bump, deliberately deferred to its own reviewed change rather than rushed in.
+- Test coverage is intentionally minimal, not exhaustive.
