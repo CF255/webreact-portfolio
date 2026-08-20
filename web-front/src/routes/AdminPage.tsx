@@ -14,13 +14,6 @@ function AdminPage (){
     const auth = useAuth()
     const {users} = useCapSlider()
 
-/*     const id = users.find(a => a.id)
-    console.log(id)
-    const card = id?.cardslide.find((car)=> car.id)
-    console.log(card)
-    const trueorfalse = card?.cardslide
-    console.log(trueorfalse) */
-
     async function changeSlideOtion(id: string) {
         
         try {
