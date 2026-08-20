@@ -71,11 +71,20 @@ const APP_FEATURES = [
   "Movie and GIF search integrations",
 ];
 
+const NAV_LINKS = [
+  { href: "#about", label: "About" },
+  { href: "#skills", label: "Skills" },
+  { href: "#experience", label: "Experience" },
+  { href: "#project", label: "Project" },
+  { href: "#contact", label: "Contact" },
+];
+
 export default function Home() {
   const auth = useAuth();
   const goTo = useNavigate();
   const [demoError, setDemoError] = useState("");
   const [demoLoading, setDemoLoading] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   async function handleDemoLogin() {
     setDemoLoading(true);
@@ -85,7 +94,7 @@ export default function Home() {
       auth.saveUser(json);
       goTo("/dashboard");
     } catch (error) {
-      setDemoError("No se pudo iniciar la demo, intenta de nuevo.");
+      setDemoError("Couldn't start the demo, please try again.");
       setDemoLoading(false);
     }
   }
@@ -94,18 +103,31 @@ export default function Home() {
     <div className="landing">
       <header className="landing-nav">
         <span className="landing-nav-brand">Andrews Fernandez</span>
-        <nav className="landing-nav-links">
-          <a href="#about">About</a>
-          <a href="#skills">Skills</a>
-          <a href="#experience">Experience</a>
-          <a href="#project">Project</a>
-          <a href="#contact">Contact</a>
+
+        <nav className={`landing-nav-links ${menuOpen ? "landing-nav-links-open" : ""}`}>
+          {NAV_LINKS.map((link) => (
+            <a key={link.href} href={link.href} onClick={() => setMenuOpen(false)}>{link.label}</a>
+          ))}
+          <Link to={auth.isAuthenticated ? "/dashboard" : "/login"} className="landing-nav-cta landing-nav-cta-mobile" onClick={() => setMenuOpen(false)}>
+            {auth.isAuthenticated ? "Go to dashboard" : "Log in"}
+          </Link>
         </nav>
-        {auth.isAuthenticated ? (
-          <Link to="/dashboard" className="landing-nav-cta">Go to dashboard</Link>
-        ) : (
-          <Link to="/login" className="landing-nav-cta">Log in</Link>
-        )}
+
+        <Link to={auth.isAuthenticated ? "/dashboard" : "/login"} className="landing-nav-cta landing-nav-cta-desktop">
+          {auth.isAuthenticated ? "Go to dashboard" : "Log in"}
+        </Link>
+
+        <button
+          type="button"
+          className="landing-nav-toggle"
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen((open) => !open)}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
       </header>
 
       <section className="landing-hero">
@@ -118,14 +140,14 @@ export default function Home() {
           maintainability.
         </p>
         <div className="landing-hero-actions">
-          <button onClick={handleDemoLogin} disabled={demoLoading} className="landing-btn landing-btn-solid">
-            {demoLoading ? "Cargando..." : "Explore the app (demo)"}
+          <button type="button" onClick={handleDemoLogin} disabled={demoLoading} aria-busy={demoLoading} className="landing-btn landing-btn-solid">
+            {demoLoading ? "Loading..." : "Explore the app (demo)"}
           </button>
-          <a href={REPO_URL} target="_blank" rel="noreferrer" className="landing-btn landing-btn-outline">
-            <FontAwesomeIcon icon={faGithub} /> View code
+          <a href={REPO_URL} target="_blank" rel="noopener noreferrer" className="landing-btn landing-btn-outline">
+            <FontAwesomeIcon icon={faGithub} aria-hidden="true" /> View code
           </a>
         </div>
-        {!!demoError && <p className="landing-hero-error">{demoError}</p>}
+        {!!demoError && <p className="landing-hero-error" role="alert">{demoError}</p>}
         <p className="landing-hero-subtext">
           No account needed — the demo button logs you straight in. Prefer to try
           the real flow? <Link to="/signup">Create an account</Link> or <Link to="/login">log in</Link> instead.
@@ -133,6 +155,7 @@ export default function Home() {
       </section>
 
       <section id="about" className="landing-section">
+        <p className="landing-eyebrow">Who I am</p>
         <h2>About me</h2>
         <p>
           Proven experience in designing and developing APIs, distributed systems, and
@@ -142,6 +165,7 @@ export default function Home() {
       </section>
 
       <section id="skills" className="landing-section">
+        <p className="landing-eyebrow">What I work with</p>
         <h2>Skills</h2>
         <div className="landing-skills">
           {SKILLS.map((skill) => (
@@ -151,6 +175,7 @@ export default function Home() {
       </section>
 
       <section id="experience" className="landing-section">
+        <p className="landing-eyebrow">Where I've worked</p>
         <h2>Experience</h2>
         <div className="landing-experience-list">
           {EXPERIENCE.map((job) => (
@@ -175,6 +200,7 @@ export default function Home() {
       </section>
 
       <section id="project" className="landing-section">
+        <p className="landing-eyebrow">A working demo, not a screenshot</p>
         <h2>Featured project</h2>
         <article className="landing-project-card">
           <h3>WebReact — Full-Stack Portfolio App</h3>
@@ -183,44 +209,46 @@ export default function Home() {
             front, Node.js + Express + MongoDB on the back) built to showcase real
             production-style patterns, not just a static page.
           </p>
-          <ul>
+          <div className="landing-skills landing-project-features">
             {APP_FEATURES.map((feature) => (
-              <li key={feature}>{feature}</li>
+              <span className="landing-skill-tag" key={feature}>{feature}</span>
             ))}
-          </ul>
+          </div>
           <div className="landing-hero-actions">
-            <button onClick={handleDemoLogin} disabled={demoLoading} className="landing-btn landing-btn-solid">
-              Try it live
+            <button type="button" onClick={handleDemoLogin} disabled={demoLoading} aria-busy={demoLoading} className="landing-btn landing-btn-solid">
+              {demoLoading ? "Loading..." : "Try it live"}
             </button>
-            <a href={REPO_URL} target="_blank" rel="noreferrer" className="landing-btn landing-btn-outline">
-              <FontAwesomeIcon icon={faGithub} /> Source code
+            <a href={REPO_URL} target="_blank" rel="noopener noreferrer" className="landing-btn landing-btn-outline">
+              <FontAwesomeIcon icon={faGithub} aria-hidden="true" /> Source code
             </a>
           </div>
+          {!!demoError && <p className="landing-hero-error" role="alert">{demoError}</p>}
         </article>
       </section>
 
       <section id="contact" className="landing-section">
+        <p className="landing-eyebrow">Let's talk</p>
         <h2>Contact</h2>
         <ul className="landing-contact-list">
           <li>
-            <FontAwesomeIcon icon={faEnvelope} />
+            <FontAwesomeIcon icon={faEnvelope} aria-hidden="true" />
             <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
           </li>
           <li>
-            <FontAwesomeIcon icon={faPhone} />
+            <FontAwesomeIcon icon={faPhone} aria-hidden="true" />
             <a href={`tel:${PHONE.replace(/\s/g, "")}`}>{PHONE}</a>
           </li>
           <li>
-            <FontAwesomeIcon icon={faLocationDot} />
+            <FontAwesomeIcon icon={faLocationDot} aria-hidden="true" />
             <span>{LOCATION}</span>
           </li>
           <li>
-            <FontAwesomeIcon icon={faGithub} />
-            <a href={GITHUB_URL} target="_blank" rel="noreferrer">github.com/CF255</a>
+            <FontAwesomeIcon icon={faGithub} aria-hidden="true" />
+            <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">github.com/CF255</a>
           </li>
         </ul>
         <a href={cvFile} download="Andrews-Fernandez-CV.pdf" className="landing-btn landing-btn-outline">
-          <FontAwesomeIcon icon={faDownload} /> Download CV
+          <FontAwesomeIcon icon={faDownload} aria-hidden="true" /> Download CV
         </a>
       </section>
 

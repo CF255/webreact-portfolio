@@ -5,18 +5,20 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Home from './routes/Home.tsx'
 import Signup from './routes/Signup.tsx'
 import Login from './routes/Login.tsx'
-import Dashboard from './routes/Dashboard.tsx'
 import ProtectedRoute from './routes/ProtectedRoute.tsx'
 import { AuthProvider } from './auth/AuthProvider.tsx'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
-import TresEnRaya from './routes/TresEnRaya.jsx'
-import ApiPelis from './routes/ApiPelis.jsx'
-import Giffy from './routes/Giffy.jsx'
-import Perfil from './routes/Perfil.jsx'
-import Notes from './routes/Notes.tsx'
-import Messages from './routes/Messages.jsx'
-import AdminPage from './routes/AdminPage.tsx'
+import {
+  Dashboard,
+  TresEnRaya,
+  ApiPelis,
+  Giffy,
+  Perfil,
+  Notes,
+  Messages,
+  AdminPage,
+} from './routes/lazyRoutes.ts'
 
 
 
