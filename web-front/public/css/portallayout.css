@@ -52,6 +52,26 @@ width: 40px;
 } 
 
 
+.btncv{
+    color: #202024;
+    background-color: #fff;
+    font-weight: bold;
+    border: 2px solid #fff;
+    border-radius: 5px;
+    padding: 5px 10px;
+    text-decoration: none;
+    transition: 0.3s ease-in-out;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.btncv:hover{
+    background-color: #202024;
+    color: #fff;
+    border-color: #fff;
+}
+
+
  .btnsignout{
   color: rgb(70, 77, 5);
   background-color: rgb(196, 199, 138);

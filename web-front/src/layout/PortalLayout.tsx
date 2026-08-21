@@ -72,8 +72,8 @@ import PerfilInformation from "../components/PortalLayout/PerfilInformation";
             <nav className="navPortalLayaout">
                 <ul className={`links ${clicked? 'active' : ''}`}>
                     <li className="liPortalLayaout">
-                        <Link className="aroutes" to="/dasboard">...</Link>
-                    </li>                    
+                        <Link className="btncv" to="/">Mi Portafolio</Link>
+                    </li>
                     <li className="liPortalLayaout ">
                         <Link className="aroutes"  to={`/perfil/notes/${auth.getUser()?.id }`}>Notas</Link>
                     </li>
