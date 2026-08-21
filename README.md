@@ -23,7 +23,6 @@ Full-stack portfolio piece by **[Andrews Luis Fernandez](https://webreact-portfo
 - [CI/CD](#cicd)
 - [Deployment](#deployment)
 - [Login](#login)
-- [Known limitations](#known-limitations)
 
 ## Architecture
 
@@ -202,9 +201,3 @@ The backend's free Render plan spins down after inactivity — the first request
 ## Login
 
 There's an always-on demo account so anyone can explore the authenticated app without registering: username `demo`, password `demo1234` — or just click "Explore the app (demo)" on the landing page or the login screen. You can also create your own account from the signup page.
-
-## Known limitations
-
-- The frontend's main bundle is still ~1.2MB — the authenticated app's routes are already code-split with `React.lazy`, but some large shared dependencies haven't been split out of the initial chunk yet.
-- A handful of moderate/high vulnerabilities remain in `vite`/`react-router-dom` transitive dependencies; fixing them means a major-version bump, deliberately deferred to its own reviewed change rather than rushed in.
-- Test coverage is intentionally minimal, not exhaustive.
