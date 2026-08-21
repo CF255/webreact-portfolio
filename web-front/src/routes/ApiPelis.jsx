@@ -37,8 +37,8 @@ const handledchanged = (event) =>{
 }
 
 useEffect(() =>{
-console.log('new movie')
-},[getMovies])
+  getMovies({search: 'movie'})
+},[])
 
   return (
    <PortalLayout>
